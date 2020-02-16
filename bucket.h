@@ -12,10 +12,11 @@
 #include<typeinfo>
 #include<initializer_list>
 #include <exception>
+#include <algorithm>
 
 namespace my {
 
-template <typename T>
+template<typename T>
 class bucket {
 public:
 	class iterator;
@@ -28,10 +29,9 @@ public:
 	}
 
 	//Parameterized constructor with all elements initialized to 0
-	//To avoid conversion from argument type to class, this constructor is marked explicit
 	explicit bucket(const int size) :
 			m_size(size), m_pArray(new T[size] { }), m_capacity(m_size) {
-
+		//To avoid conversion from argument type to class, this constructor is marked explicit
 	}
 
 	//Parameterized constructor with all elements initialized to second argument
@@ -42,7 +42,6 @@ public:
 			m_pArray[i] = init;
 		}
 	}
-
 
 	//Constructor with initializer list
 	bucket(std::initializer_list<T> list) {
@@ -137,7 +136,6 @@ public:
 		}
 	}
 
-
 	void insert_element(std::initializer_list<T> list) {
 		for (T x : list) {
 			add(x);
@@ -194,7 +192,6 @@ public:
 		return iterator(m_size, *this);
 	}
 
-
 private: //Private member variables
 	int m_size { 0 };
 	T *m_pArray = new T[10] { }; //Allocate an array of free memory and initialize the elements to 0
@@ -230,12 +227,25 @@ private: //Private member functions
 };
 
 template<typename T>
+void reverse(typename bucket<T>::iterator begin,
+		typename bucket<T>::iterator end) {
+	//Reverse the elements of the array
+
+	--end;					//Move the iterator 1 place back to keep within range
+	while (begin < end) {
+
+		std::swap(*begin, *end);
+
+		begin++;
+		end--;
+	}
+}
+
+template<typename T>
 void reverse(bucket<T> &orig) {
 	//Reverse the elements of the array
 	auto begin = orig.begin();
 	auto end = --orig.end();	//Move the iterator 1 place back to keep within range
-
-	std::cout << typeid(begin).name()<< std::endl;
 
 	while (begin < end) {
 
@@ -246,15 +256,17 @@ void reverse(bucket<T> &orig) {
 	}
 }
 
+
 template<class T>
 std::ostream& operator<<(std::ostream &out, const bucket<T> &orig) {
 	out << orig.m_pArray[orig.m_position];
 	return out;
 }
 
+
 template<typename T>
 class bucket<T>::iterator {
-	int m_index{0};
+	int m_index { 0 };
 	bucket &m_bucket;
 
 public:
@@ -296,15 +308,15 @@ public:
 		return m_index != copy.m_index;
 	}
 
-	bool /*const&*/ operator<(const iterator &other) const {
+	bool /*const&*/operator<(const iterator &other) const {
 		return (m_index < other.m_index);
 	}
 
-	bool /*const&*/ operator<=(const iterator &other) const {
+	bool /*const&*/operator<=(const iterator &other) const {
 		return (m_index <= other.m_index);
 	}
 
-	bool /*const&*/ operator>(const iterator &other) const {
+	bool /*const&*/operator>(const iterator &other) const {
 		return (m_index > other.m_index);
 	}
 };
