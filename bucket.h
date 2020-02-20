@@ -14,7 +14,7 @@
 #include <exception>
 #include <algorithm>
 
-namespace my {
+namespace sam {
 
 template<typename T>
 class bucket {
@@ -46,7 +46,7 @@ public:
 	//Constructor with initializer list
 	bucket(std::initializer_list<T> list) {
 		for (T value : list) {
-			add(value);
+			add_element(value);
 		}
 	}
 
@@ -185,11 +185,11 @@ public:
 	}
 
 	iterator begin() {
-		return iterator(0, *this);
+		return iterator(m_pArray);
 	}
 
 	iterator end() {
-		return iterator(m_size, *this);
+		return iterator(&m_pArray[m_size]);
 	}
 
 private: //Private member variables
@@ -226,26 +226,14 @@ private: //Private member functions
 	}
 };
 
-template<typename T>
-void reverse(typename bucket<T>::iterator begin,
-		typename bucket<T>::iterator end) {
-	//Reverse the elements of the array
-
-	--end;					//Move the iterator 1 place back to keep within range
-	while (begin < end) {
-
-		std::swap(*begin, *end);
-
-		begin++;
-		end--;
-	}
-}
 
 template<typename T>
 void reverse(bucket<T> &orig) {
 	//Reverse the elements of the array
 	auto begin = orig.begin();
-	auto end = --orig.end();	//Move the iterator 1 place back to keep within range
+	auto end = --orig.end();//Move the iterator 1 place back to keep within range
+
+	std::cout << typeid(begin).name() << std::endl;
 
 	while (begin < end) {
 
@@ -263,61 +251,60 @@ std::ostream& operator<<(std::ostream &out, const bucket<T> &orig) {
 	return out;
 }
 
-
 template<typename T>
-class bucket<T>::iterator {
-	int m_index { 0 };
-	bucket &m_bucket;
+class bucket<T>::iterator{
+
+	T* pIndex;
 
 public:
-	iterator(int pos, bucket &container) :
-			m_index(pos), m_bucket(container) {
+	iterator(T* pos) :
+			pIndex(pos) {
 	}
 
-	iterator& operator=(iterator &other) {
-		m_bucket[m_index] = other.m_bucket[m_index];
+/*	iterator &operator=(const iterator &other){
+		pIndex = other.pIndex;
 		return *this;
-	}
+	}*/
 
-	T& operator*() const {
+	T &operator*() const{
 
-		return m_bucket.at(m_index);
+		return *pIndex;
 	}
 
 	iterator& operator++() {
-		m_index++;
+		pIndex++;
 		return *this;
 	}
 
 	iterator& operator++(int) {
-		++m_index;
+		++pIndex;
 		return *this;
 	}
 
 	iterator& operator--(int) {
-		--m_index;
+		--pIndex;
 		return *this;
 	}
 
 	iterator& operator--() {
-		m_index--;
+		pIndex--;
 		return *this;
 	}
 
 	bool operator!=(const iterator &copy) const {
-		return m_index != copy.m_index;
+		return pIndex != copy.pIndex;
 	}
 
 	bool /*const&*/operator<(const iterator &other) const {
-		return (m_index < other.m_index);
+		return (pIndex < other.pIndex);
 	}
 
 	bool /*const&*/operator<=(const iterator &other) const {
-		return (m_index <= other.m_index);
+		return (pIndex <= other.pIndex);
 	}
 
 	bool /*const&*/operator>(const iterator &other) const {
-		return (m_index > other.m_index);
+		return (pIndex > other.pIndex);
 	}
 };
 
