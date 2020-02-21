@@ -254,11 +254,11 @@ std::ostream& operator<<(std::ostream &out, const bucket<T> &orig) {
 template<typename T>
 class bucket<T>::iterator{
 
-	T* pIndex;
+	T* m_pIndex;
 
 public:
 	iterator(T* pos) :
-			pIndex(pos) {
+			m_pIndex(pos) {
 	}
 
 /*	iterator &operator=(const iterator &other){
@@ -268,43 +268,44 @@ public:
 
 	T &operator*() const{
 
-		return *pIndex;
+		return *m_pIndex;
 	}
 
 	iterator& operator++() {
-		pIndex++;
+		m_pIndex++;
 		return *this;
 	}
 
 	iterator& operator++(int) {
-		++pIndex;
+		++m_pIndex;
 		return *this;
 	}
 
 	iterator& operator--(int) {
-		--pIndex;
+		--m_pIndex;
 		return *this;
 	}
 
 	iterator& operator--() {
-		pIndex--;
+		m_pIndex--;
 		return *this;
 	}
 
+
 	bool operator!=(const iterator &copy) const {
-		return pIndex != copy.pIndex;
+		return m_pIndex != copy.m_pIndex;
 	}
 
-	bool /*const&*/operator<(const iterator &other) const {
-		return (pIndex < other.pIndex);
+	bool operator==(const iterator &copy) const {
+		return m_pIndex == copy.m_pIndex;
 	}
 
-	bool /*const&*/operator<=(const iterator &other) const {
-		return (pIndex <= other.pIndex);
+	bool operator<(const iterator &other) const {
+		return (m_pIndex < other.m_pIndex);
 	}
 
-	bool /*const&*/operator>(const iterator &other) const {
-		return (pIndex > other.pIndex);
+	bool operator>(const iterator &other) const {
+		return (m_pIndex > other.m_pIndex);
 	}
 };
 
