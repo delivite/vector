@@ -42,16 +42,60 @@ template<typename iter>
 //Return the minimum element of the vector
 iter min_value(iter first, iter last) {
 
-	iter max = first;
+	iter min = first;
 
 	while (first != last) {
-		if (*max > *first) {
-			max = first;
+		if (*min > *first) {
+			min = first;
 		}
 
 		first++;
 	}
-	return max;
+	return min;
+}
+
+template<typename iter>
+//Return the zero-index of the maximum value
+int max_elem(iter first, iter last) {
+	int count{};
+	int max_index{};
+	if (first == last) {
+		return -1;
+	}
+	iter max = first;
+
+	while (first != last) {
+
+		if (*max < *first) {
+			max = first;
+			max_index = count;
+		}
+		++count;
+		++first;
+	}
+	return max_index;
+}
+
+template<typename iter>
+//Return the zero-index of the minimum value
+int min_elem(iter first, iter last) {
+	int count{};
+	int min_index{};
+	if (first == last) {
+		return -1;
+	}
+	iter min = first;
+
+	while (first != last) {
+
+		if (*min > *first) {
+			min = first;
+			min_index = count;
+		}
+		++count;
+		++first;
+	}
+	return min_index;
 }
 
 }				//namespace
