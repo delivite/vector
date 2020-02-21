@@ -138,7 +138,7 @@ public:
 
 	void insert_element(std::initializer_list<T> list) {
 		for (T x : list) {
-			add(x);
+			add_element(x);
 		}
 	}
 
